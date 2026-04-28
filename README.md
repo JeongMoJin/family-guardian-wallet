@@ -22,6 +22,13 @@
 
 가디언월렛은 XRPL 의 네이티브 multisig (`SignerListSet` · `multisign`) 으로 별도 컨트랙트 없이 가족 2/3 승인 구조를 구현한다. 본선 진출 시 **메인넷 트랜잭션 시연 + 태평양 법률 자문을 활용한 규제 검토 + 시니어 인지건강 앱 ‘매일 두뇌건강’ 사용자군 대상 베타 시나리오** 로 확장한다.
 
+## 라이브 데모
+
+- **데모 URL:** <https://guardian-wallet-9f53.onrender.com>
+- **시연 모드 (한 화면 분할):** <https://guardian-wallet-9f53.onrender.com/?demo=1>
+
+첫 접속은 30 ~ 50 초 깨어남(free tier 특성). 한 번 깨우면 다음부턴 즉시 응답. testnet 시니어 주소 `rn3XdGVPxYboVZkdWzySGfi5K1LC2ym9gi` 가 화면에 그대로 노출되니 testnet explorer 에서 잔액·서명 이력을 직접 확인할 수 있다.
+
 ## 데모 영상 (1분 45초)
 
 [![가디언월렛 시연 영상](https://img.youtube.com/vi/fPoFNWqmEzw/maxresdefault.jpg)](https://youtu.be/fPoFNWqmEzw)
