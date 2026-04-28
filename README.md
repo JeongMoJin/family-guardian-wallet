@@ -25,9 +25,11 @@
 
 ## 데모 영상 (1분 45초)
 
-> 🎬 **YouTube:** _업로드 후 URL 추가 예정_
->
-> 영상 흐름: Title → Problem (초고령사회 · 회색 지대) → Solution (가족 2/3 승인) → DemoFlow (시연 모드 한 화면 분할 시뮬레이션) → Differentiator (왜 XRPL) → CTA. 결과 카드에는 실제 testnet `SignerListSet` tx hash (`D449E423...`) 가 노출된다.
+[![가디언월렛 시연 영상](https://img.youtube.com/vi/fPoFNWqmEzw/maxresdefault.jpg)](https://youtu.be/fPoFNWqmEzw)
+
+YouTube: <https://youtu.be/fPoFNWqmEzw>
+
+영상 흐름: Title → Problem (초고령사회 · 회색 지대) → Solution (가족 2/3 승인) → DemoFlow (시연 모드 한 화면 분할 시뮬레이션) → Differentiator (왜 XRPL) → CTA. 결과 카드에는 실제 testnet `SignerListSet` tx hash (`D449E423...`) 가 노출된다.
 
 ## 핵심 흐름 (시연 영상 발췌)
 
