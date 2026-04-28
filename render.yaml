@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: guardian-wallet
+    runtime: node
+    plan: free
+    buildCommand: npm install --no-audit --no-fund && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NODE_VERSION
+        value: 20.11.0
+      - key: XRPL_NETWORK
+        value: wss://s.altnet.rippletest.net:51233
+      - key: SENIOR_ADDRESS
+        sync: false
+      - key: SENIOR_SEED
+        sync: false
+      - key: GUARDIAN1_ADDRESS
+        sync: false
+      - key: GUARDIAN1_SEED
+        sync: false
+      - key: GUARDIAN2_ADDRESS
+        sync: false
+      - key: GUARDIAN2_SEED
+        sync: false
+      - key: GUARDIAN3_ADDRESS
+        sync: false
+      - key: GUARDIAN3_SEED
+        sync: false
+      - key: DEMO_DESTINATION
+        sync: false
+      - key: DEMO_AMOUNT_XRP
+        value: "100"
