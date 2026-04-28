@@ -86,3 +86,8 @@ export const approveSigningRequest = (
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ guardianAddress }),
   }).then((r) => json<SigningRequestView>(r));
+
+export const fundSenior = (): Promise<{ address: string; balanceXrp: string }> =>
+  fetch(`${BASE}/faucet`, { method: 'POST' }).then((r) =>
+    json<{ address: string; balanceXrp: string }>(r),
+  );

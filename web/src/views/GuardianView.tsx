@@ -84,9 +84,11 @@ export const GuardianView = ({ guardian, compact = false }: Props) => {
                   className="bg-white rounded-2xl p-5 shadow-soft border-2 border-senior-line"
                 >
                   <div className="flex items-start justify-between gap-3">
-                    <div className="space-y-1">
-                      <div className="text-senior-muted text-xs">보내는 사람</div>
-                      <div className="font-mono text-xs break-all text-senior-ink">{r.fromAddress}</div>
+                    <div className="space-y-1 min-w-0">
+                      <div className="text-senior-muted text-xs">보내는 사람 — 시니어 지갑</div>
+                      <div className="font-mono text-xs break-all text-senior-inkSoft">
+                        {r.fromAddress}
+                      </div>
                     </div>
                     <span className="text-xs px-2.5 py-1 rounded-full bg-senior-accent/15 text-senior-accentDeep font-bold shrink-0">
                       대기 중
@@ -94,8 +96,10 @@ export const GuardianView = ({ guardian, compact = false }: Props) => {
                   </div>
 
                   <div className="mt-3 space-y-1">
-                    <div className="text-senior-muted text-xs">받는 사람</div>
-                    <div className="font-mono text-xs break-all text-senior-ink">{r.toAddress}</div>
+                    <div className="text-senior-muted text-xs">받는 사람 — 외부 지갑</div>
+                    <div className="font-mono text-xs break-all text-senior-inkSoft">
+                      {r.toAddress}
+                    </div>
                   </div>
 
                   <div className="mt-4">

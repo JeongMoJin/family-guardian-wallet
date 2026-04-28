@@ -3,6 +3,8 @@ import clsx from 'clsx';
 import {
   approveSigningRequest,
   createSigningRequest,
+  fetchAccount,
+  fundSenior,
   listSigningRequests,
   type AppConfig,
   type SigningRequestView,
@@ -29,6 +31,7 @@ export const DemoView = ({ config }: Props) => {
   const [autoError, setAutoError] = useState<string | null>(null);
   const [latestId, setLatestId] = useState<string | null>(null);
   const [latest, setLatest] = useState<SigningRequestView | null>(null);
+  const [funding, setFunding] = useState(false);
 
   // 진행 중 결과 폴링
   useEffect(() => {
@@ -46,10 +49,27 @@ export const DemoView = ({ config }: Props) => {
     return () => clearInterval(t);
   }, [latestId]);
 
+  const ensureBalance = async () => {
+    if (!config.seniorAddress) return;
+    try {
+      const acct = await fetchAccount(config.seniorAddress);
+      const balance = parseFloat(acct.balanceXrp);
+      if (balance >= 60) return;
+      // 잔액 부족 — testnet faucet 으로 자동 충전
+      setFunding(true);
+      await fundSenior();
+      // ledger 안정화 대기
+      await sleep(2200);
+    } finally {
+      setFunding(false);
+    }
+  };
+
   const startAuto = async () => {
     setAutoError(null);
     setAutoStep(1);
     try {
+      await ensureBalance();
       const created = await createSigningRequest({
         toAddress: config.demoDestination,
         amountXrp: '50',
@@ -72,6 +92,18 @@ export const DemoView = ({ config }: Props) => {
     } catch (err) {
       setAutoError(err instanceof Error ? err.message : '자동 시연 실패');
       setAutoStep(0);
+    }
+  };
+
+  const manualFund = async () => {
+    setAutoError(null);
+    setFunding(true);
+    try {
+      await fundSenior();
+    } catch (err) {
+      setAutoError(err instanceof Error ? err.message : '충전 실패');
+    } finally {
+      setFunding(false);
     }
   };
 
@@ -112,12 +144,27 @@ export const DemoView = ({ config }: Props) => {
             </div>
             <div className="flex gap-2">
               {!running && !finished && (
-                <button
-                  onClick={startAuto}
-                  className="px-7 py-4 rounded-2xl bg-senior-accent text-white text-lg font-bold shadow-soft hover:bg-senior-accentDeep transition"
-                >
-                  자동 시연 시작 →
-                </button>
+                <div className="flex flex-col gap-2 items-end">
+                  <button
+                    onClick={startAuto}
+                    disabled={funding}
+                    className={clsx(
+                      'px-7 py-4 rounded-2xl text-white text-lg font-bold shadow-soft transition',
+                      funding
+                        ? 'bg-senior-accent/60 cursor-wait'
+                        : 'bg-senior-accent hover:bg-senior-accentDeep',
+                    )}
+                  >
+                    {funding ? '테스트 잔액 충전 중...' : '자동 시연 시작 →'}
+                  </button>
+                  <button
+                    onClick={manualFund}
+                    disabled={funding}
+                    className="text-xs text-senior-muted hover:text-senior-accentDeep underline-offset-4 hover:underline"
+                  >
+                    테스트 잔액만 따로 충전하기
+                  </button>
+                </div>
               )}
               {(running || finished) && (
                 <button

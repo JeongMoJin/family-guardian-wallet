@@ -105,7 +105,8 @@ export const SeniorView = ({ address, defaultDestination, compact = false }: Pro
         <p className="text-4xl md:text-5xl font-black text-senior-ink mt-1">
           {account ? `${account.balanceXrp} XRP` : '...'}
         </p>
-        <p className="text-xs text-senior-muted mt-2 break-all font-mono">{address}</p>
+        <p className="text-xs text-senior-muted mt-3">내 지갑 주소</p>
+        <p className="text-xs text-senior-inkSoft break-all font-mono mt-1">{address}</p>
       </section>
 
       <section className="bg-senior-bg/60 rounded-2xl p-5 border border-senior-line">
@@ -128,7 +129,7 @@ export const SeniorView = ({ address, defaultDestination, compact = false }: Pro
       >
         <div className="text-base font-extrabold text-senior-ink">송금하기</div>
         <label className="block">
-          <span className="text-sm text-senior-muted">받는 분 주소 (예시 주소가 미리 채워져 있어요)</span>
+          <span className="text-sm text-senior-muted">받는 분의 지갑 주소</span>
           <input
             type="text"
             value={toAddress}
@@ -136,6 +137,10 @@ export const SeniorView = ({ address, defaultDestination, compact = false }: Pro
             className="mt-1.5 w-full font-mono text-sm rounded-xl border-2 border-senior-line px-4 py-3 focus:outline-none focus:border-senior-accent transition"
             placeholder="r..."
           />
+          <span className="block mt-1.5 text-xs text-senior-muted">
+            지갑 주소는 은행 계좌번호처럼 <b>r</b>로 시작하는 영문·숫자 코드예요. 데모용 예시가 미리
+            채워져 있어 그대로 보내도 됩니다.
+          </span>
         </label>
         <label className="block">
           <span className="text-sm text-senior-muted">보낼 금액 (XRP)</span>
