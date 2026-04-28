@@ -54,6 +54,8 @@ const Panel: React.FC<{ children: React.ReactNode; title: string; sub?: string }
       display: 'flex',
       flexDirection: 'column',
       height: '100%',
+      boxShadow: COLORS.shadow,
+      backdropFilter: 'blur(8px)',
     }}
   >
     <Header title={title} sub={sub} />
@@ -96,7 +98,7 @@ const SeniorPanel = () => {
       <div
         style={{
           marginTop: 8,
-          background: '#FFF',
+          background: COLORS.cardSolid,
           border: `2px solid ${COLORS.line}`,
           borderRadius: 14,
           padding: '12px 16px',
@@ -114,7 +116,7 @@ const SeniorPanel = () => {
       <div
         style={{
           marginTop: 10,
-          background: '#FFF',
+          background: COLORS.cardSolid,
           border: `2px solid ${COLORS.line}`,
           borderRadius: 14,
           padding: '12px 16px',
@@ -168,7 +170,7 @@ const SeniorPanel = () => {
             marginTop: 'auto',
             opacity: resultEnter.opacity,
             transform: `translateY(${resultEnter.translateY}px)`,
-            background: '#ECFDF5',
+            background: COLORS.goodBg,
             border: `2px solid ${COLORS.good}`,
             borderRadius: 18,
             padding: 18,
@@ -229,7 +231,7 @@ const GuardianPanel = ({ index }: { index: 1 | 2 }) => {
               fontSize: 12,
               padding: '4px 10px',
               borderRadius: 999,
-              background: submitted ? '#ECFDF5' : '#FEF3C7',
+              background: submitted ? COLORS.goodBg : COLORS.warnBg,
               color: submitted ? COLORS.good : COLORS.warn,
               fontWeight: 800,
             }}
@@ -304,10 +306,11 @@ const StageBanner = () => {
     >
       <span
         style={{
-          background: COLORS.card,
+          background: COLORS.cardSolid,
           border: `2px solid ${COLORS.line}`,
           padding: '10px 22px',
           borderRadius: 999,
+          boxShadow: COLORS.shadow,
         }}
       >
         {stageText(frame)}
@@ -328,7 +331,7 @@ const Loader = () => {
         bottom: 28,
         left: '50%',
         transform: 'translateX(-50%)',
-        background: COLORS.card,
+        background: COLORS.cardSolid,
         border: `2px solid ${COLORS.accent}`,
         borderRadius: 999,
         padding: '12px 24px',
@@ -338,6 +341,7 @@ const Loader = () => {
         display: 'flex',
         alignItems: 'center',
         gap: 12,
+        boxShadow: COLORS.shadow,
       }}
     >
       <div

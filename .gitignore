@@ -7,3 +7,7 @@ dist/
 !.env.example
 *.log
 .DS_Store
+
+# 사용자 자료 (KFIP 신청서·대표이미지 원본 등) — 공개 저장소에 올리지 않음
+doc/
+

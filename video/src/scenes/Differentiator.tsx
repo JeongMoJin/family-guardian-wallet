@@ -29,9 +29,9 @@ export const Differentiator = () => {
         style={{
           opacity: head.opacity,
           transform: `translateY(${head.translateY}px)`,
-          fontSize: 28,
+          fontSize: 24,
           letterSpacing: 6,
-          color: COLORS.accent,
+          color: COLORS.accentDeep,
           fontWeight: 700,
         }}
       >
@@ -45,6 +45,7 @@ export const Differentiator = () => {
           fontWeight: 800,
           marginTop: 12,
           letterSpacing: -1,
+          color: COLORS.ink,
         }}
       >
         후견 1인 권한 집중을, 가족 합의 + XRPL 로 풀었다
@@ -73,13 +74,15 @@ export const Differentiator = () => {
                 minHeight: 380,
                 display: 'flex',
                 flexDirection: 'column',
+                boxShadow: COLORS.shadow,
+                backdropFilter: 'blur(8px)',
               }}
             >
               <div
                 style={{
                   fontSize: 18,
                   letterSpacing: 4,
-                  color: COLORS.accent,
+                  color: COLORS.accentDeep,
                   fontWeight: 700,
                 }}
               >
@@ -99,7 +102,7 @@ export const Differentiator = () => {
               <div
                 style={{
                   fontSize: TYPO.body,
-                  color: COLORS.muted,
+                  color: COLORS.inkSoft,
                   marginTop: 18,
                   lineHeight: 1.5,
                 }}

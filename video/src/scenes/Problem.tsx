@@ -26,9 +26,9 @@ export const Problem = () => {
         style={{
           opacity: titleAnim.opacity,
           transform: `translateY(${titleAnim.translateY}px)`,
-          fontSize: 28,
+          fontSize: 24,
           letterSpacing: 6,
-          color: COLORS.accent,
+          color: COLORS.accentDeep,
           fontWeight: 700,
         }}
       >
@@ -61,7 +61,8 @@ export const Problem = () => {
                 borderRadius: 24,
                 padding: '28px 36px',
                 border: `2px solid ${COLORS.line}`,
-                boxShadow: '0 4px 18px rgba(31,41,55,0.04)',
+                boxShadow: COLORS.shadow,
+                backdropFilter: 'blur(8px)',
               }}
             >
               <div style={{ fontSize: TYPO.h3, fontWeight: 800, color: COLORS.ink }}>

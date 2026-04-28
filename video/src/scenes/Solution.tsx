@@ -11,13 +11,44 @@ export const Solution = () => {
   const g3 = useEnter(130, 22);
   const note = useEnter(170, 24);
 
-  const dotStyle = (good: boolean): React.CSSProperties => ({
-    width: 24,
-    height: 24,
-    borderRadius: 999,
-    background: good ? COLORS.good : '#E5E7EB',
-    marginRight: 12,
-  });
+  const guardianRow = (label: string, dotColor: string, signed: boolean, anim: ReturnType<typeof useEnter>) => (
+    <div
+      style={{
+        opacity: anim.opacity,
+        transform: `translateY(${anim.translateY}px)`,
+        background: COLORS.card,
+        border: `2px solid ${signed ? COLORS.good : COLORS.line}`,
+        borderRadius: 24,
+        padding: '24px 28px',
+        display: 'flex',
+        alignItems: 'center',
+        boxShadow: COLORS.shadow,
+        backdropFilter: 'blur(8px)',
+      }}
+    >
+      <div
+        style={{
+          width: 28,
+          height: 28,
+          borderRadius: 999,
+          background: signed ? COLORS.good : dotColor,
+          marginRight: 16,
+          opacity: signed ? 1 : 0.5,
+        }}
+      />
+      <div style={{ fontSize: TYPO.h3, fontWeight: 700, color: COLORS.ink }}>{label}</div>
+      <div
+        style={{
+          marginLeft: 'auto',
+          fontSize: TYPO.body,
+          color: signed ? COLORS.good : COLORS.muted,
+          fontWeight: 700,
+        }}
+      >
+        {signed ? '승인' : '대기'}
+      </div>
+    </div>
+  );
 
   return (
     <AbsoluteFill style={{ padding: 96, flexDirection: 'column', justifyContent: 'center' }}>
@@ -25,9 +56,9 @@ export const Solution = () => {
         style={{
           opacity: head.opacity,
           transform: `translateY(${head.translateY}px)`,
-          fontSize: 28,
+          fontSize: 24,
           letterSpacing: 6,
-          color: COLORS.accent,
+          color: COLORS.accentDeep,
           fontWeight: 700,
         }}
       >
@@ -41,9 +72,10 @@ export const Solution = () => {
           fontWeight: 800,
           marginTop: 12,
           letterSpacing: -1,
+          color: COLORS.ink,
         }}
       >
-        가족 <span style={{ color: COLORS.accent }}>2 / 3 승인</span>이 있어야 자산이 움직인다
+        가족 <span style={{ color: COLORS.accentDeep }}>2 / 3 승인</span>이 있어야 자산이 움직인다
       </div>
 
       <div
@@ -63,10 +95,24 @@ export const Solution = () => {
             padding: 36,
             opacity: senior.opacity,
             transform: `translateY(${senior.translateY}px)`,
+            boxShadow: COLORS.shadow,
+            backdropFilter: 'blur(8px)',
           }}
         >
-          <div style={{ fontSize: TYPO.small, color: COLORS.muted }}>시니어</div>
-          <div style={{ fontSize: TYPO.h2, fontWeight: 800, marginTop: 8 }}>송금하기</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div
+              style={{
+                width: 18,
+                height: 18,
+                borderRadius: 999,
+                background: COLORS.senior,
+              }}
+            />
+            <div style={{ fontSize: TYPO.small, color: COLORS.muted }}>시니어</div>
+          </div>
+          <div style={{ fontSize: TYPO.h2, fontWeight: 800, marginTop: 12, color: COLORS.ink }}>
+            송금하기
+          </div>
           <div style={{ fontSize: TYPO.h3, color: COLORS.muted, marginTop: 20 }}>50 XRP</div>
           <div style={{ fontSize: TYPO.small, color: COLORS.muted, marginTop: 8 }}>
             받는 분 → r9...
@@ -74,38 +120,9 @@ export const Solution = () => {
         </div>
 
         <div style={{ display: 'grid', gap: 18 }}>
-          {[
-            { label: '가족 가디언 1', anim: g1, signed: true },
-            { label: '가족 가디언 2', anim: g2, signed: true },
-            { label: '가족 가디언 3', anim: g3, signed: false },
-          ].map((g) => (
-            <div
-              key={g.label}
-              style={{
-                opacity: g.anim.opacity,
-                transform: `translateY(${g.anim.translateY}px)`,
-                background: COLORS.card,
-                border: `2px solid ${g.signed ? COLORS.good : COLORS.line}`,
-                borderRadius: 24,
-                padding: '24px 28px',
-                display: 'flex',
-                alignItems: 'center',
-              }}
-            >
-              <div style={dotStyle(g.signed)} />
-              <div style={{ fontSize: TYPO.h3, fontWeight: 700 }}>{g.label}</div>
-              <div
-                style={{
-                  marginLeft: 'auto',
-                  fontSize: TYPO.body,
-                  color: g.signed ? COLORS.good : COLORS.muted,
-                  fontWeight: 700,
-                }}
-              >
-                {g.signed ? '승인' : '대기'}
-              </div>
-            </div>
-          ))}
+          {guardianRow('가족 가디언 1', COLORS.guardianA, true, g1)}
+          {guardianRow('가족 가디언 2', COLORS.guardianB, true, g2)}
+          {guardianRow('가족 가디언 3', COLORS.guardianA, false, g3)}
         </div>
       </div>
 
@@ -113,7 +130,7 @@ export const Solution = () => {
         style={{
           marginTop: 56,
           fontSize: TYPO.body,
-          color: COLORS.muted,
+          color: COLORS.inkSoft,
           opacity: note.opacity,
           transform: `translateY(${note.translateY}px)`,
         }}

@@ -1,75 +1,99 @@
-import { AbsoluteFill, useCurrentFrame } from 'remotion';
+import { AbsoluteFill, Img, staticFile } from 'remotion';
 import { COLORS, TYPO } from '../theme';
 import { useEnter } from '../anim';
 
 export const Title = () => {
-  const frame = useCurrentFrame();
   const a = useEnter(0, 24);
   const b = useEnter(10, 24);
   const c = useEnter(22, 30);
+  const hero = useEnter(6, 36);
 
   return (
     <AbsoluteFill
       style={{
+        flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        textAlign: 'center',
-        padding: 80,
+        padding: '0 96px',
+        gap: 48,
       }}
     >
+      <div style={{ flex: 1, maxWidth: 900 }}>
+        <div
+          style={{
+            opacity: a.opacity,
+            transform: `translateY(${a.translateY}px)`,
+            fontSize: 24,
+            letterSpacing: 6,
+            color: COLORS.accentDeep,
+            fontWeight: 700,
+          }}
+        >
+          FAMILY GUARDIAN WALLET
+        </div>
+        <div
+          style={{
+            opacity: b.opacity,
+            transform: `translateY(${b.translateY}px)`,
+            fontSize: TYPO.display,
+            fontWeight: 900,
+            letterSpacing: -2,
+            marginTop: 20,
+            color: COLORS.ink,
+            lineHeight: 1.05,
+          }}
+        >
+          가디언월렛
+        </div>
+        <div
+          style={{
+            opacity: c.opacity,
+            transform: `translateY(${c.translateY}px)`,
+            fontSize: 34,
+            marginTop: 28,
+            color: COLORS.inkSoft,
+            lineHeight: 1.5,
+          }}
+        >
+          인지저하 시기 시니어의 자산을,
+          <br />
+          가족 2 / 3 승인이 있어야만 인출되는
+          <br />
+          XRPL 멀티시그 지갑
+        </div>
+        <div
+          style={{
+            opacity: c.opacity * 0.85,
+            marginTop: 36,
+            fontSize: 20,
+            color: COLORS.muted,
+            letterSpacing: 4,
+          }}
+        >
+          KFIP 2026 · XRPL TESTNET
+        </div>
+      </div>
+
       <div
         style={{
-          opacity: a.opacity,
-          transform: `translateY(${a.translateY}px)`,
-          fontSize: 28,
-          letterSpacing: 4,
-          color: COLORS.accent,
-          fontWeight: 700,
+          flex: 1.05,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          opacity: hero.opacity,
+          transform: `translateY(${hero.translateY}px) scale(${1 - 0.04 * (1 - hero.opacity)})`,
         }}
       >
-        FAMILY GUARDIAN WALLET
+        <Img
+          src={staticFile('hero.png')}
+          style={{
+            width: '100%',
+            maxWidth: 820,
+            height: 'auto',
+            filter: 'drop-shadow(0 24px 48px rgba(124, 90, 160, 0.18))',
+          }}
+        />
       </div>
-      <div
-        style={{
-          opacity: b.opacity,
-          transform: `translateY(${b.translateY}px)`,
-          fontSize: TYPO.display,
-          fontWeight: 900,
-          letterSpacing: -2,
-          marginTop: 24,
-          color: COLORS.ink,
-        }}
-      >
-        가디언월렛
-      </div>
-      <div
-        style={{
-          opacity: c.opacity,
-          transform: `translateY(${c.translateY}px)`,
-          fontSize: 36,
-          marginTop: 28,
-          color: COLORS.muted,
-          maxWidth: 1700,
-          lineHeight: 1.45,
-        }}
-      >
-        인지저하 시기 시니어의 자산을, 가족 2/3 승인이 있어야만 인출되는 XRPL 멀티시그 지갑
-      </div>
-      <div
-        aria-hidden
-        style={{
-          position: 'absolute',
-          bottom: 80,
-          opacity: c.opacity * 0.7,
-          fontSize: 22,
-          color: COLORS.muted,
-          letterSpacing: 6,
-        }}
-      >
-        KFIP 2026 · {/* not user-facing dot but visual divider */} XRPL TESTNET
-      </div>
-      {/* prevent unused var */}
-      <span style={{ display: 'none' }}>{frame}</span>
     </AbsoluteFill>
   );
 };

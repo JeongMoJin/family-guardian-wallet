@@ -15,7 +15,7 @@ export const WIDTH = 1920;
 export const HEIGHT = 1080;
 
 const SCENES = [
-  { name: 'title', frames: 90 },
+  { name: 'title', frames: 105 },
   { name: 'problem', frames: 510 },
   { name: 'solution', frames: 360 },
   { name: 'demoFlow', frames: 1380 },
@@ -34,10 +34,9 @@ export const Demo = () => {
   return (
     <AbsoluteFill
       style={{
-        backgroundColor: COLORS.bg,
+        background: COLORS.bgGradient,
         color: COLORS.ink,
         fontFamily,
-        fontFeatureSettings: '"ss01"',
       }}
     >
       <Sequence from={offsets.title} durationInFrames={SCENES[0].frames}>
