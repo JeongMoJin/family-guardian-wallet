@@ -3,8 +3,14 @@ KFIP 2026 신청서 docx에 내용을 채워 넣는 스크립트.
 양식(표 구조/스타일/폰트/병합/서명 영역) 100% 보존.
 - 셀의 paragraph 텍스트만 in-place 갱신
 - 다중 라인은 첫 paragraph 안에서 line break(<w:br/>) 로 처리
+
+사용:
+    python scripts/fill_application.py
+    python scripts/fill_application.py --demo-url https://... --video-url https://...
 """
 
+import argparse
+import os
 from pathlib import Path
 from docx import Document
 from docx.enum.text import WD_BREAK
@@ -20,8 +26,6 @@ DST = PROJECT / "doc" / "KFIP_2026_신청서_가디언월렛.docx"
 
 GITHUB_URL = "https://github.com/JeongMoJin/family-guardian-wallet"
 SENIOR_ADDRESS = "rn3XdGVPxYboVZkdWzySGfi5K1LC2ym9gi"
-DEMO_URL = "(배포 후 입력 — Render에서 발급되는 https://guardian-wallet-xxxx.onrender.com)"
-VIDEO_URL = "(촬영·업로드 후 입력 — YouTube 링크 권장)"
 
 PROJECT_INTRO = (
     "가디언월렛(Family Guardian Wallet)은 인지저하 시기 시니어의 자산을 가족 2/3 승인이 있어야만 인출되는 "
@@ -42,18 +46,19 @@ PROBLEM = (
     "확보했다."
 )
 
-PROTOTYPE_LINES = [
-    f"웹 데모: {DEMO_URL}",
-    f"데모 영상: {VIDEO_URL}",
-    f"GitHub: {GITHUB_URL}",
-    f"시니어 testnet 주소: {SENIOR_ADDRESS}",
-    "",
-    "현재 동작 범위 (testnet 검증 완료):",
-    "1) 시니어 1 + 가디언 3 testnet 계정 자동 생성, 시니어 계정에 SignerListSet (quorum=2, weight=1) 등록.",
-    "2) CLI 데모 — 가디언 1명 서명: 거부 / 2명 서명: multisign 결합 후 testnet 제출 성공(tesSUCCESS).",
-    "3) 웹 데모 — 시니어 화면(잔액·송금 폼) / 가디언 화면(대기 요청·승인 버튼) / 시연 모드(한 화면 분할).",
-    "4) quorum 충족 시 서버가 자동으로 multisign 결합 + submitAndWait 으로 testnet 제출, explorer 링크가 시니어 화면에 노출.",
-]
+def prototype_lines(demo_url: str, video_url: str) -> list[str]:
+    return [
+        f"웹 데모: {demo_url}",
+        f"데모 영상: {video_url}",
+        f"GitHub: {GITHUB_URL}",
+        f"시니어 testnet 주소: {SENIOR_ADDRESS}",
+        "",
+        "현재 동작 범위 (testnet 검증 완료):",
+        "1) 시니어 1 + 가디언 3 testnet 계정 자동 생성, 시니어 계정에 SignerListSet (quorum=2, weight=1) 등록.",
+        "2) CLI 데모 — 가디언 1명 서명: 거부 / 2명 서명: multisign 결합 후 testnet 제출 성공(tesSUCCESS).",
+        "3) 웹 데모 — 시니어 화면(잔액·송금 폼) / 가디언 화면(대기 요청·승인 버튼) / 시연 모드(한 화면 분할).",
+        "4) quorum 충족 시 서버가 자동으로 multisign 결합 + submitAndWait 으로 testnet 제출, explorer 링크가 시니어 화면에 노출.",
+    ]
 
 
 # ----- 셀 텍스트 안전 갱신 헬퍼 -------------------------------------------
@@ -110,6 +115,20 @@ def set_cell(cell: _Cell, text_or_lines) -> None:
 # ----- 본 작업 --------------------------------------------------------------
 
 def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--demo-url",
+        default=os.environ.get("DEMO_URL")
+        or "(배포 후 입력 — Render에서 발급되는 https://guardian-wallet-xxxx.onrender.com)",
+    )
+    parser.add_argument(
+        "--video-url",
+        default=os.environ.get("VIDEO_URL")
+        or "(촬영·업로드 후 입력 — YouTube 링크 권장)",
+    )
+    parser.add_argument("--phone", default=os.environ.get("PHONE", ""))
+    args = parser.parse_args()
+
     doc = Document(str(SRC))
     table = doc.tables[0]
     rows = table.rows
@@ -126,12 +145,12 @@ def main() -> None:
 
     # R5: 대표자 / 연락처 / 이메일
     set_cell(rows[5].cells[2], "진정모")
-    set_cell(rows[5].cells[5], "")
+    set_cell(rows[5].cells[5], args.phone)
     set_cell(rows[5].cells[8], "jeongmoflag@gmail.com")
 
     # R6: 담당자
     set_cell(rows[6].cells[2], "진정모")
-    set_cell(rows[6].cells[5], "")
+    set_cell(rows[6].cells[5], args.phone)
     set_cell(rows[6].cells[8], "jeongmoflag@gmail.com")
 
     # R7: 프로젝트 소개
@@ -147,7 +166,7 @@ def main() -> None:
     set_cell(rows[10].cells[2], f"{SENIOR_ADDRESS}  (시니어 계정 / XRPL testnet)")
 
     # R11: 프로토타입 (다중 라인)
-    set_cell(rows[11].cells[2], PROTOTYPE_LINES)
+    set_cell(rows[11].cells[2], prototype_lines(args.demo_url, args.video_url))
 
     # R13: 진행단계 — MVP개발 체크
     set_cell(rows[13].cells[2], "☑MVP개발")
