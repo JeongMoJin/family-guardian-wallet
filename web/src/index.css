@@ -9,8 +9,16 @@ body,
 }
 
 body {
-  background-color: #fff8f0;
-  color: #1f2937;
+  background: linear-gradient(135deg, #fbe4e9 0%, #efd8ec 50%, #d7c2e8 100%);
+  background-attachment: fixed;
+  color: #3a2c4f;
   font-family: 'Pretendard', system-ui, -apple-system, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
+}
+
+/* 카드 안에서 mono 텍스트는 한 톤 옅게 */
+code,
+.font-mono {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: -0.01em;
 }

@@ -14,12 +14,14 @@ import os
 from pathlib import Path
 from docx import Document
 from docx.enum.text import WD_BREAK
+from docx.shared import Inches
 from docx.table import _Cell
 
 
 PROJECT = Path(__file__).resolve().parent.parent
 SRC = PROJECT / "doc" / "Korea Financial Innovation Program 2026 신청서.docx"
 DST = PROJECT / "doc" / "KFIP_2026_신청서_가디언월렛.docx"
+DEFAULT_SIGNATURE = PROJECT / "doc" / "signature.png"
 
 
 # ----- 입력 데이터 ----------------------------------------------------------
@@ -127,6 +129,11 @@ def main() -> None:
         or "(촬영·업로드 후 입력 — YouTube 링크 권장)",
     )
     parser.add_argument("--phone", default=os.environ.get("PHONE", ""))
+    parser.add_argument(
+        "--signature",
+        default=str(DEFAULT_SIGNATURE) if DEFAULT_SIGNATURE.exists() else "",
+        help="대표자 사인 PNG 경로 (기본: doc/signature.png 가 있으면 자동 사용)",
+    )
     args = parser.parse_args()
 
     doc = Document(str(SRC))
@@ -146,12 +153,12 @@ def main() -> None:
     # R5: 대표자 / 연락처 / 이메일
     set_cell(rows[5].cells[2], "진정모")
     set_cell(rows[5].cells[5], args.phone)
-    set_cell(rows[5].cells[8], "jeongmoflag@gmail.com")
+    set_cell(rows[5].cells[8], "wlswjdah123@naver.com")
 
     # R6: 담당자
     set_cell(rows[6].cells[2], "진정모")
     set_cell(rows[6].cells[5], args.phone)
-    set_cell(rows[6].cells[8], "jeongmoflag@gmail.com")
+    set_cell(rows[6].cells[8], "wlswjdah123@naver.com")
 
     # R7: 프로젝트 소개
     set_cell(rows[7].cells[2], PROJECT_INTRO)
@@ -171,14 +178,20 @@ def main() -> None:
     # R13: 진행단계 — MVP개발 체크
     set_cell(rows[13].cells[2], "☑MVP개발")
 
-    # R14: 서명 영역 — 날짜와 대표자 이름만 채움. 도장(인) 위치는 사용자 직접.
+    # R14: 서명 영역 — 날짜·대표자 이름·사인 이미지
     last_cell = rows[14].cells[0]
     for p in last_cell.paragraphs:
         t = p.text.strip()
         if t == "년 월 일":
             _replace_paragraph_text(p, "2026년 5월 12일")
         elif t.startswith("대표자"):
-            _replace_paragraph_text(p, "대표자: 진정모   (인)")
+            if args.signature and Path(args.signature).exists():
+                # "(인)" 텍스트 대신 사인 이미지를 같은 paragraph 끝에 inline 으로 삽입
+                _replace_paragraph_text(p, "대표자: 진정모   ")
+                run = p.add_run()
+                run.add_picture(args.signature, width=Inches(0.55))
+            else:
+                _replace_paragraph_text(p, "대표자: 진정모   (인)")
 
     DST.parent.mkdir(parents=True, exist_ok=True)
     doc.save(str(DST))

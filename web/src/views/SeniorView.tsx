@@ -17,9 +17,9 @@ interface Props {
 }
 
 const statusBadge = (s: SigningRequestView['status']) => {
-  if (s === 'submitted') return { text: '송금 완료', cls: 'bg-emerald-100 text-emerald-800' };
-  if (s === 'failed') return { text: '실패', cls: 'bg-red-100 text-red-800' };
-  return { text: '가족 승인 대기', cls: 'bg-amber-100 text-amber-800' };
+  if (s === 'submitted') return { text: '송금 완료', cls: 'bg-senior-goodSoft text-senior-good' };
+  if (s === 'failed') return { text: '실패', cls: 'bg-senior-warnSoft text-senior-warn' };
+  return { text: '가족 승인 기다리는 중', cls: 'bg-senior-accent/15 text-senior-accentDeep' };
 };
 
 export const SeniorView = ({ address, defaultDestination, compact = false }: Props) => {
@@ -31,9 +31,8 @@ export const SeniorView = ({ address, defaultDestination, compact = false }: Pro
   const [amount, setAmount] = useState('50');
   const [submitting, setSubmitting] = useState(false);
   const [latest, setLatest] = useState<SigningRequestView | null>(null);
-  const [recent, setRecent] = useState<SigningRequestView[]>([]);
 
-  // 잔액·가디언 목록은 한 번 + 5초 주기 갱신
+  // 잔액·가디언 목록 5초 주기 갱신
   useEffect(() => {
     let alive = true;
     const load = () => {
@@ -53,7 +52,7 @@ export const SeniorView = ({ address, defaultDestination, compact = false }: Pro
     };
   }, [address]);
 
-  // 본인 송금 요청 진행 상태 폴링
+  // 본인이 만든 가장 최근 요청 폴링 (시연 모드에서 자동 시연이 만든 요청도 잡음)
   useEffect(() => {
     let alive = true;
     const tick = () => {
@@ -61,11 +60,7 @@ export const SeniorView = ({ address, defaultDestination, compact = false }: Pro
         .then((all) => {
           if (!alive) return;
           const mine = all.filter((r) => r.fromAddress === address);
-          setRecent(mine.slice(0, 3));
-          if (latest) {
-            const updated = mine.find((r) => r.id === latest.id);
-            if (updated) setLatest(updated);
-          }
+          if (mine.length > 0) setLatest(mine[0]);
         })
         .catch(() => {});
     };
@@ -75,7 +70,7 @@ export const SeniorView = ({ address, defaultDestination, compact = false }: Pro
       alive = false;
       clearInterval(t);
     };
-  }, [address, latest?.id]);
+  }, [address]);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -98,137 +93,109 @@ export const SeniorView = ({ address, defaultDestination, compact = false }: Pro
   const canSubmit = signers?.registered && !submitting;
 
   return (
-    <div className={clsx(!compact && 'min-h-screen bg-senior-bg')}>
-      {!compact && (
-        <header className="border-b border-senior-line bg-white">
-          <div className="max-w-3xl mx-auto px-6 py-5 flex items-center justify-between">
-            <h1 className="text-xl font-bold text-senior-ink">가디언월렛</h1>
-            <span className="text-sm text-senior-muted">XRPL testnet</span>
-          </div>
-        </header>
+    <main className={clsx(compact ? 'p-5 space-y-5' : 'max-w-3xl mx-auto px-6 py-10 space-y-7')}>
+      {error && (
+        <div className="rounded-xl border border-senior-bad/30 bg-senior-warnSoft px-5 py-4 text-senior-bad text-sm">
+          {error}
+        </div>
       )}
 
-      <main className={clsx(compact ? 'p-5 space-y-5' : 'max-w-3xl mx-auto px-6 py-10 space-y-8')}>
-        {error && (
-          <div className="rounded-xl border border-red-200 bg-red-50 px-5 py-4 text-red-700">
-            {error}
-          </div>
-        )}
+      <section>
+        <p className="text-senior-muted text-sm">내 잔액</p>
+        <p className="text-4xl md:text-5xl font-black text-senior-ink mt-1">
+          {account ? `${account.balanceXrp} XRP` : '...'}
+        </p>
+        <p className="text-xs text-senior-muted mt-2 break-all font-mono">{address}</p>
+      </section>
 
-        <section>
-          <p className="text-senior-muted">내 잔액</p>
-          <p className="text-4xl font-bold text-senior-ink mt-1">
-            {account ? `${account.balanceXrp} XRP` : '...'}
+      <section className="bg-senior-bg/60 rounded-2xl p-5 border border-senior-line">
+        {!signers ? (
+          <p className="text-senior-muted text-sm">불러오는 중...</p>
+        ) : signers.registered ? (
+          <p className="text-senior-ink text-base leading-relaxed">
+            <b className="text-senior-accentDeep">가족 가디언 {signers.signers?.length}명</b> 중{' '}
+            <b className="text-senior-accentDeep">{signers.quorum}명</b>이 승인해야 송금이 진행됩니다.
+            큰돈을 한 사람이 혼자 보낼 수 없도록 가족이 한 번 더 보는 구조예요.
           </p>
-          <p className="text-sm text-senior-muted mt-2 break-all font-mono">{address}</p>
-        </section>
+        ) : (
+          <p className="text-senior-muted text-sm">아직 가족 가디언이 등록되어 있지 않습니다.</p>
+        )}
+      </section>
 
-        <section className="bg-senior-card rounded-2xl p-6 shadow-sm border border-senior-line">
-          <h2 className="text-lg font-semibold text-senior-ink mb-3">큰 금액 송금 시 가족 승인</h2>
-          {!signers ? (
-            <p className="text-senior-muted">불러오는 중...</p>
-          ) : signers.registered ? (
-            <p className="text-senior-ink">
-              내가 송금을 요청하면, 등록된 가족 <b>{signers.signers?.length}</b>명 중{' '}
-              <b>{signers.quorum}</b>명이 승인해야 송금이 실행됩니다.
-            </p>
-          ) : (
-            <p className="text-senior-muted">
-              아직 가디언이 등록되어 있지 않습니다. 루트에서{' '}
-              <code className="px-1.5 py-0.5 rounded bg-amber-100 text-amber-900">
-                npm run setup-signers
-              </code>{' '}
-              를 먼저 실행해 주세요.
-            </p>
+      <form
+        onSubmit={onSubmit}
+        className="bg-white rounded-2xl p-5 shadow-soft border border-senior-line space-y-4"
+      >
+        <div className="text-base font-extrabold text-senior-ink">송금하기</div>
+        <label className="block">
+          <span className="text-sm text-senior-muted">받는 분 주소 (예시 주소가 미리 채워져 있어요)</span>
+          <input
+            type="text"
+            value={toAddress}
+            onChange={(e) => setToAddress(e.target.value)}
+            className="mt-1.5 w-full font-mono text-sm rounded-xl border-2 border-senior-line px-4 py-3 focus:outline-none focus:border-senior-accent transition"
+            placeholder="r..."
+          />
+        </label>
+        <label className="block">
+          <span className="text-sm text-senior-muted">보낼 금액 (XRP)</span>
+          <input
+            type="number"
+            min="1"
+            step="1"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            className="mt-1.5 w-full text-2xl font-extrabold rounded-xl border-2 border-senior-line px-4 py-3 focus:outline-none focus:border-senior-accent transition text-senior-ink"
+          />
+        </label>
+        <button
+          type="submit"
+          disabled={!canSubmit}
+          className={clsx(
+            'w-full py-4 rounded-2xl text-lg font-bold shadow-soft transition',
+            canSubmit
+              ? 'bg-senior-accent text-white hover:bg-senior-accentDeep'
+              : 'bg-senior-accent text-white opacity-50 cursor-not-allowed',
+          )}
+        >
+          {submitting ? '요청 만드는 중...' : '가족에게 승인 요청 보내기'}
+        </button>
+        <p className="text-xs text-senior-muted text-center">
+          이 버튼을 누르면 가족 가디언 화면에 카드가 즉시 도착해요.
+        </p>
+      </form>
+
+      {latest && (
+        <section className="bg-white rounded-2xl p-5 shadow-soft border border-senior-line space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="font-bold text-senior-ink">가장 최근 송금 요청</div>
+            <span className={clsx('text-xs px-2.5 py-1 rounded-full font-bold', statusBadge(latest.status).cls)}>
+              {statusBadge(latest.status).text}
+            </span>
+          </div>
+          <div className="text-senior-ink">
+            <b className="text-2xl">{latest.amountXrp} XRP</b>{' '}
+            <span className="text-senior-muted text-sm">→ {latest.toAddress.slice(0, 14)}…</span>
+          </div>
+          <div className="text-sm text-senior-muted">
+            가족 승인 진행: <b className="text-senior-ink">{latest.approvals.length}</b> /{' '}
+            <b className="text-senior-ink">{latest.quorum}</b>
+          </div>
+          {latest.explorerUrl && (
+            <a
+              href={latest.explorerUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="block text-sm text-senior-accentDeep underline break-all"
+            >
+              송금 결과 확인 (블록체인 보기) →
+            </a>
+          )}
+          {latest.errorMessage && (
+            <p className="text-sm text-senior-bad">{latest.errorMessage}</p>
           )}
         </section>
-
-        <form
-          onSubmit={onSubmit}
-          className="bg-white rounded-2xl p-6 shadow-sm border border-senior-line space-y-4"
-        >
-          <h2 className="text-lg font-semibold text-senior-ink">송금하기</h2>
-          <label className="block">
-            <span className="text-sm text-senior-muted">받는 분 주소</span>
-            <input
-              type="text"
-              value={toAddress}
-              onChange={(e) => setToAddress(e.target.value)}
-              className="mt-1 w-full font-mono text-sm rounded-xl border border-senior-line px-4 py-3 focus:outline-none focus:ring-2 focus:ring-senior-accent/40"
-              placeholder="r..."
-            />
-          </label>
-          <label className="block">
-            <span className="text-sm text-senior-muted">금액 (XRP)</span>
-            <input
-              type="number"
-              min="1"
-              step="1"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              className="mt-1 w-full text-2xl font-semibold rounded-xl border border-senior-line px-4 py-3 focus:outline-none focus:ring-2 focus:ring-senior-accent/40"
-            />
-          </label>
-          <button
-            type="submit"
-            disabled={!canSubmit}
-            className={clsx(
-              'w-full py-5 rounded-2xl text-lg font-semibold',
-              canSubmit
-                ? 'bg-senior-accent text-white hover:opacity-95'
-                : 'bg-senior-accent text-white opacity-50 cursor-not-allowed',
-            )}
-          >
-            {submitting ? '요청 만드는 중...' : '가족에게 승인 요청 보내기'}
-          </button>
-        </form>
-
-        {latest && (
-          <section className="bg-white rounded-2xl p-6 shadow-sm border border-senior-line space-y-3">
-            <div className="flex items-center justify-between">
-              <h3 className="font-semibold text-senior-ink">최근 송금 요청</h3>
-              <span
-                className={clsx('text-xs px-2 py-1 rounded-full', statusBadge(latest.status).cls)}
-              >
-                {statusBadge(latest.status).text}
-              </span>
-            </div>
-            <div className="text-senior-ink">
-              <b>{latest.amountXrp} XRP</b> →{' '}
-              <span className="font-mono text-sm break-all">{latest.toAddress}</span>
-            </div>
-            <div className="text-sm text-senior-muted">
-              승인 진행: <b>{latest.approvals.length}</b> / <b>{latest.quorum}</b>
-            </div>
-            {latest.explorerUrl && (
-              <a
-                href={latest.explorerUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-block text-sm text-senior-accent underline break-all"
-              >
-                {latest.explorerUrl}
-              </a>
-            )}
-            {latest.errorMessage && (
-              <p className="text-sm text-red-700">{latest.errorMessage}</p>
-            )}
-          </section>
-        )}
-
-        {recent.length > 1 && (
-          <section className="text-sm text-senior-muted">
-            <p>이전 요청 {recent.length}건</p>
-            <ul className="mt-2 space-y-1">
-              {recent.slice(latest ? 1 : 0).map((r) => (
-                <li key={r.id} className="font-mono">
-                  [{statusBadge(r.status).text}] {r.amountXrp} XRP → {r.toAddress.slice(0, 12)}...
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
-      </main>
-    </div>
+      )}
+    </main>
   );
 };
