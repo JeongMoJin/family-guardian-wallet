@@ -104,10 +104,54 @@ family-guardian-wallet/
 
 Render Free 인스턴스는 트래픽이 없으면 잠들었다가 첫 요청에서 30~50초 깨어난다. 시연 영상 촬영 직전에 한 번 호출해 두면 된다.
 
+## 시연 영상 (Remotion)
+
+`video/` 폴더에 1920×1080 / 30fps / 약 105초 시연 영상 코드가 있다. 가짜 UI 시뮬레이션 + 실제 testnet `SignerListSet` tx hash 를 결합해 흐름을 한 화면에 압축했다.
+
+```bash
+npm --prefix video install
+npm --prefix video run render   # → video/out/guardian-wallet-demo.mp4
+npm --prefix video run studio   # 브라우저에서 미리보기 / 편집
+```
+
+내용 구성: Title → Problem(초고령사회·회색 지대) → Solution(가족 2/3 승인) → DemoFlow(시연 모드 한 화면 분할 시뮬레이션) → Differentiator(왜 XRPL) → CTA(GitHub).
+
+## 신청서 (KFIP 2026)
+
+원본 양식과 채워진 사본:
+
+- `doc/Korea Financial Innovation Program 2026 신청서.docx` (원본)
+- `doc/KFIP_2026_신청서_가디언월렛.docx` (채움 사본)
+
+배포 URL과 영상 URL이 확정되면 한 번 더 채울 수 있다:
+
+```bash
+python scripts/fill_application.py \
+  --demo-url https://guardian-wallet-xxxx.onrender.com \
+  --video-url https://youtu.be/XXXXXXXXXXX \
+  --phone 010-XXXX-XXXX
+```
+
+PDF 변환 (Windows + Microsoft Word 가 깔린 환경):
+
+```powershell
+$word = New-Object -ComObject Word.Application
+$doc = $word.Documents.Open('C:\\...\\doc\\KFIP_2026_신청서_가디언월렛.docx')
+$doc.SaveAs([ref] 'C:\\...\\doc\\KFIP_2026_신청서_가디언월렛.pdf', [ref] 17)
+$doc.Close(); $word.Quit()
+```
+
+LibreOffice 가 깔려 있다면:
+
+```bash
+soffice --headless --convert-to pdf doc/KFIP_2026_신청서_가디언월렛.docx --outdir doc/
+```
+
 ## 참고
 
 - XRPL 멀티시그 공식 문서: https://xrpl.org/docs/concepts/accounts/multi-signing
 - xrpl.js: https://js.xrpl.org/
+- Remotion: https://www.remotion.dev/
 
 ## 라이선스
 
