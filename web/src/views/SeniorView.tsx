@@ -28,7 +28,7 @@ export const SeniorView = ({ address, defaultDestination, compact = false }: Pro
   const [error, setError] = useState<string | null>(null);
 
   const [toAddress, setToAddress] = useState(defaultDestination);
-  const [amount, setAmount] = useState('100');
+  const [amount, setAmount] = useState('50');
   const [submitting, setSubmitting] = useState(false);
   const [latest, setLatest] = useState<SigningRequestView | null>(null);
   const [recent, setRecent] = useState<SigningRequestView[]>([]);
