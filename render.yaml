@@ -27,6 +27,6 @@ services:
       - key: GUARDIAN3_SEED
         sync: false
       - key: DEMO_DESTINATION
-        sync: false
+        value: rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe
       - key: DEMO_AMOUNT_XRP
-        value: "100"
+        value: "50"
