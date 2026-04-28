@@ -19,7 +19,6 @@
 | 1차 서류 제출 마감 | 2026-05-13 (수) 23:59 |
 | 본선 진출 발표 | 2026-05-27 |
 | Final Pitch Day | 2026-06-25 · Two IFC Seoul |
-| 시상 | 1등 500만 원 + 법무법인 태평양 600만 원 상당 법률 자문 + 서울핀테크랩 입주 기회 / 2등 300만 / 3등 200만 / Toss 특별상 100만 / KORFIN 특별상 100만 |
 | 평가 키워드 | 어떤 문제 · 누구를 위한 · 왜 XRPL · 사업 발전 가능성 · 메인넷 또는 이에 준하는 PoC 흐름 |
 
 가디언월렛은 XRPL 의 네이티브 multisig (`SignerListSet` · `multisign`) 으로 별도 컨트랙트 없이 가족 2/3 승인 구조를 구현한다. 본선 진출 시 **메인넷 트랜잭션 시연 + 태평양 법률 자문을 활용한 규제 검토 + 시니어 인지건강 앱 ‘매일 두뇌건강’ 사용자군 대상 베타 시나리오** 로 확장한다.
@@ -173,4 +172,3 @@ family-guardian-wallet/
 - KFIP 2026: <https://program.xrplkorea.org/>
 - XRPL 멀티시그 공식 문서: <https://xrpl.org/docs/concepts/accounts/multi-signing>
 - xrpl.js: <https://js.xrpl.org/>
-- Remotion: <https://www.remotion.dev/>
