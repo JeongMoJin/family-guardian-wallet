@@ -130,16 +130,6 @@ npm run dev
 - in-memory 송금 요청 저장소. 서버 재시작 시 초기화.
 - testnet faucet 발급액과 SignerList reserve 합산 때문에 큰 금액 송금이 잔액 부족으로 실패할 수 있다. 폼에서 50 XRP 정도로 시작하면 안전하다.
 
-## 시연 영상 (Remotion)
-
-`video/` 폴더에 1920×1080 / 30fps / 약 105 초 시연 영상 코드가 있다. 가짜 UI 시뮬레이션 + 실제 testnet `SignerListSet` tx hash 결합.
-
-```bash
-npm --prefix video install
-npm --prefix video run render   # → video/out/guardian-wallet-demo.mp4
-npm --prefix video run studio   # 브라우저 미리보기 / 편집
-```
-
 ## 배포 — Render Free Web Service
 
 1. 본 저장소를 GitHub 에 push (이미 완료).
@@ -159,7 +149,6 @@ family-guardian-wallet/
 │   ├── scripts/             # 1 단계 CLI
 │   └── server/              # Express API + lib
 ├── web/                     # 프론트엔드 (Vite + React + Tailwind)
-├── video/                   # Remotion 시연 영상 컴포지션
 ├── docs/
 │   ├── images/              # README 갤러리
 │   └── progress.md          # 내부 진행 일지
